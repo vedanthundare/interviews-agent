@@ -39,4 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+<<<<<<< HEAD
 firebase/*.json
+=======
+>>>>>>> fe80aff24bd8bb19c6b3a8b302794939ce2d8848

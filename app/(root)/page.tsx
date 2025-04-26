@@ -1,12 +1,16 @@
+<<<<<<< HEAD
 import InterviewCard from '@/components/InterviewCard'
 import { Button } from '@/components/ui/button'
 import { dummyInterviews } from '@/constants'
 import Image from 'next/image'
 import Link from 'next/link'
+=======
+>>>>>>> fe80aff24bd8bb19c6b3a8b302794939ce2d8848
 import React from 'react'
 
 const Page = () => {
   return (
+<<<<<<< HEAD
     <>
     <section className='card-cta'>
       <div className='flex flex-col gap-6 max-w-lg'>
@@ -40,6 +44,9 @@ const Page = () => {
 
     </section>
     </>
+=======
+    <div>Home Page</div>
+>>>>>>> fe80aff24bd8bb19c6b3a8b302794939ce2d8848
   )
 }
 
