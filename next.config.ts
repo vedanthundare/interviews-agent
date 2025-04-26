@@ -1,15 +1,29 @@
+// next.config.ts
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
- 
-  eslint:{
+  webpack: (config) => {
+    config.resolve = {
+      ...config.resolve,
+      fallback: {
+        ...(config.resolve?.fallback || {}),
+        net: false,
+        tls: false,
+        fs: false,
+        child_process: false,
+        crypto: false,
+        os: false,
+        path: false,
+      },
+    };
+    return config;
+  },
+  eslint: {
     ignoreDuringBuilds: true,
   },
-  typescript:{
+  typescript: {
     ignoreBuildErrors: true,
-  }
- 
+  },
 };
 
 export default nextConfig;

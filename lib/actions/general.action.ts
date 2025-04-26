@@ -1,7 +1,8 @@
-// general.action.ts
+"use server";
 
 import { generateObject } from "ai";
 import { google } from "@ai-sdk/google";
+
 import { db } from "@/firebase/admin";
 import { feedbackSchema } from "@/constants";
 
@@ -89,59 +90,36 @@ export async function getFeedbackByInterviewId(
   return { id: feedbackDoc.id, ...feedbackDoc.data() } as Feedback;
 }
 
-// Updated getInterviewsByUserId function with userId check
-export async function getInterviewsByUserId(
-  userId: string
-): Promise<Interview[] | null> {
-  if (!userId) {
-    console.error("User ID is undefined or null");
-    return null; // Return early if userId is undefined or null
-  }
-
-  try {
-    const interviews = await db
-      .collection("interviews")
-      .where("userId", "==", userId)
-      .orderBy("createdAt", "desc")
-      .get();
-
-    return interviews.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Interview[];
-  } catch (error) {
-    console.error("Error fetching interviews:", error);
-    return null;
-  }
-}
-
-// Updated getLatestInterviews function with userId check
 export async function getLatestInterviews(
   params: GetLatestInterviewsParams
 ): Promise<Interview[] | null> {
   const { userId, limit = 20 } = params;
 
-  // Early exit if userId is not provided
-  if (!userId) {
-    console.error("User ID is undefined or null in getLatestInterviews");
-    return null; // Return early if userId is undefined or null
-  }
+  const interviews = await db
+    .collection("interviews")
+    .orderBy("createdAt", "desc")
+    .where("finalized", "==", true)
+    .where("userId", "!=", userId)
+    .limit(limit)
+    .get();
 
-  try {
-    const interviews = await db
-      .collection("interviews")
-      .orderBy("createdAt", "desc")
-      .where("finalized", "==", true)
-      .where("userId", "!=", userId)
-      .limit(limit)
-      .get();
+  return interviews.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Interview[];
+}
 
-    return interviews.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Interview[];
-  } catch (error) {
-    console.error("Error fetching latest interviews:", error);
-    return null;
-  }
+export async function getInterviewsByUserId(
+  userId: string
+): Promise<Interview[] | null> {
+  const interviews = await db
+    .collection("interviews")
+    .where("userId", "==", userId)
+    .orderBy("createdAt", "desc")
+    .get();
+
+  return interviews.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Interview[];
 }

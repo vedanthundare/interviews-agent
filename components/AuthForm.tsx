@@ -4,11 +4,11 @@ import { z } from "zod";
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "sonner";
-import { getAuth  } from "@/firebase/client";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { authClient } from "@/firebase/client"; // ✅ corrected import
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -47,7 +47,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
         const { name, email, password } = data;
 
         const userCredential = await createUserWithEmailAndPassword(
-          getAuth,
+          authClient, // ✅ fixed
           email,
           password
         );
@@ -70,7 +70,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
         const { email, password } = data;
 
         const userCredential = await signInWithEmailAndPassword(
-          getAuth,
+          authClient, // ✅ fixed
           email,
           password
         );
@@ -89,9 +89,9 @@ const AuthForm = ({ type }: { type: FormType }) => {
         toast.success("Signed in successfully.");
         router.push("/");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      toast.error(`There was an error: ${error}`);
+      toast.error(`There was an error: ${error?.message || error}`);
     }
   };
 
